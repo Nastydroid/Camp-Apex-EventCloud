@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Accept_only_sponsor_with_event</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(ISPICKVAL( CAMPX__Status__c , &quot;Accepted&quot;), ISBLANK(CAMPX__Event__c) )</errorConditionFormula>
+    <errorMessage>A Sponsor must be associated with an event before being Accepted</errorMessage>
+</ValidationRule>
