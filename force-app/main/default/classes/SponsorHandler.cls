@@ -40,7 +40,7 @@ public with sharing class SponsorHandler {
         for(CAMPX__Event__c evt : eventToUpdate){
             Decimal totalAmount = 0;
             for(CAMPX__Sponsor__c sponsors : evt.CAMPX__Sponsors__r){
-                totalAmount = totalAmount  +  sponsors.CAMPX__ContributionAmount__c;
+                totalAmount += sponsors.CAMPX__ContributionAmount__c;
                 System.debug('total ' + totalAmount);
                 
             }
@@ -65,6 +65,18 @@ public with sharing class SponsorHandler {
         }
 
        List<CAMPX__Event__c> eventToUpdateGross = [SELECT Id,CAMPX__GrossRevenue__c,(SELECT Id,CAMPX__ContributionAmount__c FROM CAMPX__Sponsors__r WHERE Id IN :sponsorsId) FROM CAMPX__Event__c WHERE Id IN :eventId];
+       //ToDO: Loop through this list and sum the sponsor amount and update the gross with it.
+       for(CAMPX__Event__c events : eventToUpdateGross){
+        Decimal newAmount = 0;
+        for(CAMPX__Sponsor__c spons : events.CAMPX__Sponsors__r){
+            newAmount += spons.CAMPX__ContributionAmount__c;
+
+        }
+
+        events.CAMPX__GrossRevenue__c = newAmount;
+       }
+
+       update eventToUpdateGross;
         
         
     }
