@@ -1,4 +1,4 @@
-trigger SponsorTrigger on CAMPX__Sponsor__c (before insert,before update) {
+trigger SponsorTrigger on CAMPX__Sponsor__c (After insert,before insert,before update,After update) {
 
     if(Trigger.isInsert){
         SponsorHandler.sponsorCreate(Trigger.new);
