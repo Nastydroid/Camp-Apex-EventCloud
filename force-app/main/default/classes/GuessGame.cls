@@ -1,30 +1,33 @@
 //BlackForce exercise
 
 public class GuessGame {
-    // random method
-    // range
-    // unknown
-    // getRandomInteger = 200;
-    Integer computerGuess = Integer.valueof(Math.floor((Math.random() * 10) + 1));
     
+    Integer computerGuess = Integer.valueof(Math.floor((Math.random() * 10) + 1));
+    Integer totalGuessAvailable = 5;
+    Integer usedGuess = 0;
     
     public String play(Integer userGuess){
-        // compare userguess and computer guess if(ahkla === kj) else if c > u
-        if(userGuess > computerGuess){
-            System.debug('Your guess is high, try again');
-            return 'Your guess is high, try again';
-        }else if(userGuess < computerGuess){
-            System.debug('your guess is low, try again.');
-            return 'your guess is low, try again.';
-        }else if(userGuess == computerGuess){
-            System.debug('You guess the number correctly!');
-            return 'You guess the number correctly!';
-        }else{
-            return 'come back later';
+        usedGuess++;
+        if(usedGuess > totalGuessAvailable){
+           // System.debug('Game over you have exhuasted your guesses the computer guess was ' + computerGuess);
+            return'Game over you have exhuasted your guesses the computer guess was ' + computerGuess;
+            
         }
-        // if there's a match return 'You guess the number correctly!'
-        // if not return either 'Your guess is high, try again'
-        // your guess is low, try again.
+        
+        Integer totalGuessLeft = totalGuessAvailable - usedGuess;
+        if(userGuess > computerGuess){
+            return 'Your guess is high, you have made ' + usedGuess + ' guesses  you have' + totalGuessLeft +' more guesses left to make';
+            
+            
+        }else if(userGuess < computerGuess){
+           return 'your guess is low, you have made  ' + usedGuess + ' you have ' + totalGuessLeft +' more guesses left to make';
+            
+        }else{
+            return 'You guessed the correct number, your guess is ' + userGuess + ', and the computer guess is ' + computerGuess;
+            
+        }
+        
+        
     }
     
     
