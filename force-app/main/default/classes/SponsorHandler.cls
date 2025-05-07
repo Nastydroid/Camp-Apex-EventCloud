@@ -66,58 +66,10 @@ public with sharing class SponsorHandler {
         
         
         
-        // List<CAMPX__Event__c> eventToUpdate =[SELECT Id,Name,CAMPX__GrossRevenue__c,(SELECT Id, CAMPX__ContributionAmount__c, CAMPX__Event__c FROM CAMPX__Sponsors__r WHERE CAMPX__Status__c = 'Accepted') FROM CAMPX__Event__c WHERE Id IN :events];
-        // System.debug('we have ' + eventToUpdate.size()+ ' sponsors');
-        // System.debug(eventToUpdate);
-        // for(CAMPX__Event__c evt : eventToUpdate){
-            //     Decimal totalAmount = 0;
-            //     for(CAMPX__Sponsor__c sponsors : evt.CAMPX__Sponsors__r){
-                //         totalAmount += sponsors.CAMPX__ContributionAmount__c;
-                //         System.debug('total ' + totalAmount);
-                
-            //     }
-            //     evt.CAMPX__GrossRevenue__c = totalAmount;
-            //     System.debug('Gross '+ evt.CAMPX__GrossRevenue__c);
-        // }
-        
-        // update eventToUpdate;
     }
     
     
-    // public static void sponsorContributionCreate(List<CAMPX__Sponsor__c> newSponsor) {
-        //     Set<Id> eventId = new Set<Id>();
-        //     Set<Id> sponsorsId = new set<Id>();
-        //     for(CAMPX__Sponsor__c sponsors : newSponsor){
-            //         if(sponsors.CAMPX__Status__c == 'Accepted' && sponsors.CAMPX__ContributionAmount__c !=null && sponsors.CAMPX__Event__c != null){
-                //             eventId.add(sponsors.CAMPX__Event__c);
-                //             sponsorsId.add(sponsors.Id);
-                
-            //         }
-            
-        //     }
-        
-        //     List<CAMPX__Event__c> eventToUpdateGross = [SELECT Id,CAMPX__GrossRevenue__c,(SELECT Id,CAMPX__ContributionAmount__c FROM CAMPX__Sponsors__r WHERE Id IN :sponsorsId) FROM CAMPX__Event__c WHERE Id IN :eventId];
-        //     //ToDO: Loop through this list and sum the sponsor amount and update the gross with it.
-        //     for(CAMPX__Event__c events : eventToUpdateGross){
-            //         Decimal newAmount = 0;
-            //         for(CAMPX__Sponsor__c spons : events.CAMPX__Sponsors__r){
-                //             if(spons.CAMPX__ContributionAmount__c != null){
-                    //                 newAmount += spons.CAMPX__ContributionAmount__c;
-                    
-                //             }
-                
-            //         }
-            
-            //         events.CAMPX__GrossRevenue__c = newAmount;
-        //     }
-        
-        //     update eventToUpdateGross;
-        
-        
-    // }
-    
-    
-    //new implementation of the triggers using the After insert context properly
+   
     
     public static void updaterGrossAfterCreation(List<CAMPX__Sponsor__c> newsponsor){
         Set<Id> eventId = new Set<Id>();
@@ -199,15 +151,3 @@ public with sharing class SponsorHandler {
     }
     
 }
-/**
- * When a CAMPX__Sponsor__c record is created and "Accepted" CAMPX__Status__c,
- * the system should account for
- * the sponsor's CAMPX__ContributedAmount__c in the CAMPX__Event__c's CAMPX__GrossRevenue__c field
- */
-
-
-/**
- * SELECT CAMPX__Event__c, SUM(CAMPX__ContributionAmount__c) total FROM CAMPX__Sponsor__c WHERE CAMPX__Status__c = 'Accepted'
-AND CAMPX__ContributionAmount__c != null AND CAMPX__Event__c != null
-    GROUP BY CAMPX__Event__c
-     */
