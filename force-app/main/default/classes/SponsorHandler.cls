@@ -69,7 +69,7 @@ public with sharing class SponsorHandler {
     }
     
     
-   
+    
     
     public static void updaterGrossAfterCreation(List<CAMPX__Sponsor__c> newsponsor){
         Set<Id> eventId = new Set<Id>();
@@ -109,8 +109,8 @@ public with sharing class SponsorHandler {
         
         
     }
-
-
+    
+    
     public static void updaterGrossAfterUpdate(List<CAMPX__Sponsor__c> newsponsor,Map<Id,CAMPX__Sponsor__c> oldSponsor){
         Set<Id> eventId = new Set<Id>();
         for(CAMPX__Sponsor__c sponsors : newsponsor){
@@ -150,4 +150,40 @@ public with sharing class SponsorHandler {
         
     }
     
+    public static void sponsorStatusUpdateRevertAmount(List<CAMPX__Sponsor__c> newSponsor, Map<Id,CAMPX__Sponsor__c> oldSponsor){
+        Set<Id> sponsorsToUpdate = new Set<Id>();
+        for(CAMPX__Sponsor__c allSponsor : newSponsor){
+            if((allSponsor.CAMPX__Status__c == 'Pending' || allSponsor.CAMPX__Status__c == 'Rejected') && allSponsor.CAMPX__Status__c != oldSponsor.get(allSponsor.Id).CAMPX__Status__c){
+                sponsorsToUpdate.add(allSponsor.Id);
+            }
+        }
+        
+        List<CAMPX__Event__c> allEvents =[SELECT Id,CAMPX__GrossRevenue__c,(SELECT Id,CAMPX__ContributionAmount__c FROM CAMPX__Sponsors__r WHERE Id IN :sponsorsToUpdate) FROM CAMPX__Event__c];
+        // List<CAMPX__Sponsor__c> spons =[SELECT Id,CAMPX__Event__c,CAMPX__Event__r.CAMPX__GrossRevenue__c FROM CAMPX__Sponsor__c WHERE Id IN :sponsorsToUpdate];
+        for(CAMPX__Event__c ev : allEvents){
+            Decimal grossREvenue = ev.CAMPX__GrossRevenue__c != null ? ev.CAMPX__GrossRevenue__c: 0; //this will avoid nullPointer exception
+            Decimal contributedAmount = 0;
+            for(CAMPX__Sponsor__c spons: ev.CAMPX__Sponsors__r){
+                Decimal SponsorscontributedAmount = spons.CAMPX__ContributionAmount__c != null ? spons.CAMPX__ContributionAmount__c : 0;
+                contributedAmount += SponsorscontributedAmount;
+                
+            }
+            
+            ev.CAMPX__GrossRevenue__c = grossREvenue - contributedAmount;
+                
+            
+        }
+
+        if(!allEvents.isEmpty()){
+            update allEvents;
+        }
+        
+        
+    }
+    
 }
+
+
+// When the CAMPX__Event__c lookup of a CAMPX__Sponsor__c changes,
+// the previously associated CAMPX__Event__c's CAMPX__GrossRevenue__c field
+// should no longer reflect the sponsor's CAMPX__ContributedAmount__c
